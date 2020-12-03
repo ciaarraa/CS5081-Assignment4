@@ -72,7 +72,7 @@ namespace WebAppTest_A3
             PersonModel test_person = new PersonModel(5, "Test Person", softwareEngineer, 20000);
 
             double expectedCount = 100;
-            double expectedAverage = 20000;
+            double expectedAverage = 20400;
 
             Assert.AreEqual(expectedCount, softwareEngineer.workerCount);
             Assert.AreEqual(expectedAverage, softwareEngineer.averageSalary);
