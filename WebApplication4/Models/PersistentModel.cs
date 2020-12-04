@@ -11,6 +11,7 @@ namespace WebApplication4.Models
         public string name { get; set; }
         public JobModel job { get; set; }
         public float salary { get; set; }
+        public CompanyModel company { get; set;}
 
         public int? jobId
         {
@@ -30,20 +31,41 @@ namespace WebApplication4.Models
             }
         }
 
+        public int? CompanyId
+        {
+            get
+            {
+                return company?.id;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    company = null;
+                    return;
+                }
+
+                company = PersistentModel.Instance.findCompany((int)value);
+            }
+        }
+
+
         public PersonModel()
         {
             id = -1;
             name = "";
             job = null;
             salary = 0;
+            company = null;
         }
 
-        public PersonModel(int id, string name, JobModel job, float salary)
+        public PersonModel(int id, string name, JobModel job, float salary, CompanyModel company)
         {
             this.id = id;
             this.name = name;
             this.job = job;
             this.salary = salary;
+            this.company = company;
 
             if (job != null)
             {
@@ -90,6 +112,26 @@ namespace WebApplication4.Models
         }
     }
 
+
+    public class CompanyModel
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+
+        public CompanyModel()
+        {
+            id = -1;
+            name = null;
+        }
+
+        public CompanyModel(int id, string name)
+        {
+            this.id = id;
+            this.name = name;
+        }
+
+
+    }
     // Simple persistent data class.
     // Data will be shared across all connections
     // NOT TO BE USED IN THE REAL WORLD! (not thread safe, can cause horrible bugs)
@@ -114,9 +156,11 @@ namespace WebApplication4.Models
 
         public int nextPersonId;
         public int nextJobId;
+        public int nextCompanyId;
 
         public List<PersonModel> persons;
         public List<JobModel> jobs;
+        public List<CompanyModel> companies;
 
         private PersistentModel()
         {
@@ -127,17 +171,26 @@ namespace WebApplication4.Models
         {
             nextPersonId = 0;
             nextJobId = 0;
+            nextCompanyId = 0;
 
             jobs = new List<JobModel>();
             addJob("Software Engineer");
             addJob("Database Manager");
             addJob("System Administrator");
 
+            companies = new List<CompanyModel>();
+            addCompany("Google");
+            addCompany("Oracle");
+            addCompany("Amazon");
+
             persons = new List<PersonModel>();
-            addPerson("Alice", jobs[0], 40000);
-            addPerson("Bob", jobs[1], 30000);
-            addPerson("Carol", jobs[2], 50000);
-            addPerson("David", jobs[0], 39000);
+            addPerson("Alice", jobs[0], 40000, companies[0]);
+            addPerson("Bob", jobs[1], 30000, companies[1]);
+            addPerson("Carol", jobs[2], 50000, companies[2]);
+            addPerson("David", jobs[0], 39000, companies[2]);
+
+
+
         }
 
         public PersonModel findPerson(int id)
@@ -156,9 +209,9 @@ namespace WebApplication4.Models
             return selected;
         }
 
-        public void addPerson(string name, JobModel job, float salary)
+        public void addPerson(string name, JobModel job, float salary, CompanyModel company)
         {
-            persons.Add(new PersonModel(nextPersonId, name, job, salary));
+            persons.Add(new PersonModel(nextPersonId, name, job, salary, company));
             nextPersonId++;
         }
 
@@ -170,7 +223,7 @@ namespace WebApplication4.Models
 
             if (outdated == null)
             {
-                addPerson(updated.name, updated.job, updated.salary);
+                addPerson(updated.name, updated.job, updated.salary, updated.company);
 
             }
             else
@@ -178,6 +231,7 @@ namespace WebApplication4.Models
                 outdated.name = updated.name;
                 outdated.job = updated.job;
                 outdated.salary = updated.salary;
+                outdated.company = updated.company;
             }
         }
 
@@ -185,9 +239,10 @@ namespace WebApplication4.Models
         {
             PersonModel outdated = findPerson(updated.id);
 
-            outdated.name = updated.name;
+            outdated.name = updated.name; ;
             outdated.job = updated.job;
             outdated.salary = updated.salary;
+            outdated.company = updated.company;
         }
 
         public void removePerson(int id)
@@ -248,5 +303,54 @@ namespace WebApplication4.Models
                 jobs.Remove(selected);
             }
         }
+
+
+        public CompanyModel findCompany(int id)
+        {
+            CompanyModel selected = null;
+
+            foreach (var company in companies)
+            {
+                if (company.id == id)
+                {
+                    selected = company;
+                    break;
+                }
+            }
+
+            return selected;
+        }
+
+        public void addCompany(string name)
+        {
+            companies.Add(new CompanyModel(nextCompanyId, name));
+            nextCompanyId++;
+        }
+
+        public void updateCompany(CompanyModel updated)
+        {
+            CompanyModel outdated = findCompany(updated.id);
+
+            if (outdated == null)
+            {
+                addCompany(updated.name);
+
+            }
+            else
+            {
+                outdated.name = updated.name;
+            }
+        }
+
+        public void removeCompany(int id)
+        {
+            CompanyModel selected = findCompany(id);
+
+            if (selected != null)
+            {
+                companies.Remove(selected);
+            }
+        }
+
     }
 }

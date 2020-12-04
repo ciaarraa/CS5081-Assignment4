@@ -9,6 +9,7 @@
                 <th>Person Id</th>
                 <th>Person</th>
                 <th>Job</th>
+                <th>Company</th>
                 <th>Salary</th>
                 <th>Deviation</th>
                 <th>&nbsp;</th>
@@ -21,6 +22,7 @@
     <td>@person.id</td>
     <td>@person.name</td>
     <td>@person.job.name</td>
+    <td>@person.company.name</td>
     <td>@person.salary</td>
     <td>@String.Format("{0:+#.00;-#.00;+0.00}%", 100 * ((person.salary / person.job.averageSalary) - 1))</td>
 

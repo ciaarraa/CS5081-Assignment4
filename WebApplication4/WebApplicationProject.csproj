@@ -3,6 +3,8 @@
   <PropertyGroup>
     <LangVersion>preview</LangVersion>   
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>017522db-9b56-4c9e-9d69-27ab290780b9</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'WebApplication4' " />
@@ -15,4 +17,7 @@
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="87.0.4280.8800" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="Views\Home\JobList %28copy%29.cshtml" />
+  </ItemGroup>
 </Project>

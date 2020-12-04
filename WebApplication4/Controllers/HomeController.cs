@@ -52,6 +52,11 @@ namespace WebApplication4.Controllers
             return View(model);
         }
 
+        public IActionResult CompanyList()
+        {
+            return View(model);
+        }
+
         public IActionResult Dummy(int? id)
         {
             PersonModel selected = null;
@@ -105,5 +110,38 @@ namespace WebApplication4.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        public IActionResult CompanyForm(int? id)
+        {
+            CompanyModel selected = null;
+
+            if (id != null)
+            {
+                selected = model.findCompany((int)id);
+            }
+
+            if (selected == null)
+            {
+                selected = new CompanyModel();
+            }
+
+            return View(selected);
+        }
+
+        public IActionResult CompanySave(CompanyModel company)
+        {
+            model.updateCompany(company);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult CompanyRemove(int id)
+        {
+            model.removeCompany(id);
+            return RedirectToAction("Index");
+        }
+
+
+
     }
 }

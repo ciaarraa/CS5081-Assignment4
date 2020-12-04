@@ -1,0 +1,23 @@
+﻿@model PersistentModel;
+
+@{ ViewData["Title"] = "Company List"; }
+
+<div id="company_list">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var company in Model.companies)
+            {
+                <tr>
+                    <td>@company.name</td>
+                    <td><a asp-controller="Home" asp-action="CompanyRemove" asp-route-id="@company.id">remove</a></td>
+                </tr>
+       }
+        </tbody>
+    </table>
+</div>

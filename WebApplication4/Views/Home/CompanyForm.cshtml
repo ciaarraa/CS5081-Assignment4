@@ -1,8 +1,8 @@
-﻿@model JobModel;
+﻿@model CompanyModel;
 
-@{ ViewData["Title"] = "Job Form"; }
+@{ ViewData["Title"] = "Company Form"; }
 
-<form id="job_form" method="post" action="/Home/JobSave">
+<form id="company_form" method="post" action="/Home/CompanySave">
     <input type="hidden" name="id" value="@Model.id" />
     <p><label for="name">Name: </label><input name="name" value="@Model.name" /></p>
     <p><button type="submit">Submit</button></p>
