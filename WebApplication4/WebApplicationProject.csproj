@@ -3,6 +3,8 @@
   <PropertyGroup>
     <LangVersion>preview</LangVersion>   
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>f08a297b-b622-4d8b-baea-2ae15e1bde8c</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'WebApplication4' " />

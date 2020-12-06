@@ -11,6 +11,7 @@ namespace WebApplication4.Models
         public string name { get; set; }
         public JobModel job { get; set; }
         public float salary { get; set; }
+        public DependantModel dependants { get; set; }
 
         public int? jobId
         {
@@ -30,20 +31,24 @@ namespace WebApplication4.Models
             }
         }
 
+       
+
         public PersonModel()
         {
             id = -1;
             name = "";
             job = null;
             salary = 0;
+            dependants = null;
         }
 
-        public PersonModel(int id, string name, JobModel job, float salary)
+        public PersonModel(int id, string name, JobModel job, float salary, DependantModel dependants)
         {
             this.id = id;
             this.name = name;
             this.job = job;
             this.salary = salary;
+            this.dependants = dependants;
 
             if (job != null)
             {
@@ -89,6 +94,94 @@ namespace WebApplication4.Models
             workerCount--;
         }
     }
+        public class Dependant
+        {
+            public string name { get; set; }
+            public int id { get; set;}
+            
+
+            public Dependant()
+            {
+
+                name = null;
+                id = -1;
+            }
+
+            public Dependant(string name)
+            {
+                this.name = name;
+                id = -1;
+            }
+
+            public void setId(int id)
+            {
+                this.id = id;
+            }
+
+        }
+    
+
+    public class DependantModel
+    {
+            public List<Dependant> dependants {get; set;}
+            public int id { get; set; }
+            public int dependantCount { get; set;}
+
+            public DependantModel()
+            {
+                dependants= new List<Dependant>();
+                dependantCount = 0;
+                id = -1;
+           
+            }
+
+            public DependantModel( int id, List<Dependant> dependants )
+            {
+                this.id = id;
+                this.dependants = dependants;
+                dependantCount = 0;
+            }
+
+            public void setId (int id, Dependant dependant)
+            {
+         
+                dependant.setId(id);
+            }
+
+            public void addDependant(Dependant dependant)
+            {
+                dependants.Add(dependant);
+                dependantCount++;
+
+            }
+
+            public void removeDependant(int id)
+            {
+                Dependant selected = findDependant(id);
+                dependants.Remove(selected);
+                dependantCount--;
+
+            }
+
+        public Dependant findDependant(int id)
+        {
+            Dependant selected = null;
+
+            foreach (var dependant in dependants)
+            {
+                if (dependant.id == id)
+                {
+                    selected = dependant;
+                    break;
+                }
+            }
+
+            return selected;
+        }
+
+        
+
+    }
 
     // Simple persistent data class.
     // Data will be shared across all connections
@@ -114,9 +207,31 @@ namespace WebApplication4.Models
 
         public int nextPersonId;
         public int nextJobId;
+        public int nextDependantId;
+        public int totalDependants;
 
         public List<PersonModel> persons;
         public List<JobModel> jobs;
+        public List<DependantModel> AllDependants;
+
+        public DependantModel D1;
+        public DependantModel D2;
+        public DependantModel D3;
+        public DependantModel D4;
+
+        public Dependant d11;
+        public Dependant d12;
+        public Dependant d13;
+        public Dependant d14;
+
+        public Dependant d21;
+        public Dependant d22;
+        public Dependant d23;
+
+        public Dependant d31;
+
+        public Dependant d41;
+
 
         private PersistentModel()
         {
@@ -127,17 +242,144 @@ namespace WebApplication4.Models
         {
             nextPersonId = 0;
             nextJobId = 0;
+            nextDependantId=0;
+            totalDependants = 0; 
+
+
 
             jobs = new List<JobModel>();
             addJob("Software Engineer");
             addJob("Database Manager");
             addJob("System Administrator");
 
+            
+            d11 = new Dependant("Aising");
+            d12 = new Dependant("Ben");
+            d13 = new Dependant("Ciara");
+            d14 = new Dependant("Doris");
+
+            d21 = new Dependant("Eric");
+            d22 = new Dependant("Fred");
+            d23 = new Dependant("Greta");
+
+            d31 = new Dependant("Helen");
+
+            d41 = new Dependant("Icarus");
+
+
+
+
+
+
+            AllDependants = new List<DependantModel>();
+            addDependant(new List<Dependant>() { d11, d12, d13, d14 });
+            addDependant(new List<Dependant>() { d21, d22, d23 });
+            addDependant(new List<Dependant>() { d31 });
+            addDependant(new List<Dependant>() { d41 });
+
+            
+            
             persons = new List<PersonModel>();
-            addPerson("Alice", jobs[0], 40000);
-            addPerson("Bob", jobs[1], 30000);
-            addPerson("Carol", jobs[2], 50000);
-            addPerson("David", jobs[0], 39000);
+            addPerson("Alice", jobs[0], 40000, AllDependants[0]);
+            addPerson("Bob", jobs[1], 30000, AllDependants[1]);
+            addPerson("Carol", jobs[2], 50000, AllDependants[2]);
+            addPerson("David", jobs[0], 39000, AllDependants[3]);
+        }
+
+        public void addDependant(DependantModel DM, Dependant d1)
+        {
+            d1.setId(totalDependants);
+            DM.addDependant(d1);
+            totalDependants++;
+        }
+
+        public void addDependant(List<Dependant> dependants)
+        {
+            foreach (Dependant d in dependants)
+            {
+                d.setId(totalDependants);
+                totalDependants++;
+            }
+            AllDependants.Add(new DependantModel(nextDependantId, dependants));
+            nextDependantId++;
+            
+        }
+
+        public DependantModel findEnclosingList(int id)
+        {
+            DependantModel selected = null;
+
+            foreach (DependantModel DM in AllDependants)
+            {
+                if (DM.findDependant(id) != null)
+                {
+                    selected = DM;
+                }
+                    
+            }
+            return selected;
+        }
+
+
+        public void addDependant(int id, string name)
+        {
+            DependantModel selected = findDependantModel(id);
+
+            if (selected != null)
+            {
+                Dependant d = new Dependant(name);
+                d.setId(totalDependants);
+                selected.addDependant(d);
+                totalDependants++;
+
+            }
+
+        }
+
+        public void removeDependant(DependantModel DM, Dependant d1)
+        {
+            DM.removeDependant(d1.id);
+        }
+
+        
+
+        public void removeDependant(int idModel, int idDependant)
+        {
+            DependantModel selected = findDependantModel(idModel);
+
+
+            if (selected != null)
+            { 
+                selected.removeDependant(idDependant);
+
+            }
+
+
+        }
+
+        public Dependant findDependant(DependantModel DM, int id)
+        {
+            Dependant selected = null;
+
+            selected = DM.findDependant(id);
+
+            return selected;
+        }
+
+        public DependantModel findDependantModel(int id)
+        {
+            DependantModel selected = null;
+
+            foreach (var DM in AllDependants)
+            {
+                if (DM.id == id)
+                {
+                    selected = DM;
+                    break;
+                }
+            }
+
+            return selected;
         }
 
         public PersonModel findPerson(int id)
@@ -156,9 +398,9 @@ namespace WebApplication4.Models
             return selected;
         }
 
-        public void addPerson(string name, JobModel job, float salary)
+        public void addPerson(string name, JobModel job, float salary, DependantModel dependants)
         {
-            persons.Add(new PersonModel(nextPersonId, name, job, salary));
+            persons.Add(new PersonModel(nextPersonId, name, job, salary, dependants));
             nextPersonId++;
         }
 
@@ -170,7 +412,7 @@ namespace WebApplication4.Models
 
             if (outdated == null)
             {
-                addPerson(updated.name, updated.job, updated.salary);
+                addPerson(updated.name, updated.job, updated.salary, updated.dependants);
 
             }
             else
@@ -178,6 +420,7 @@ namespace WebApplication4.Models
                 outdated.name = updated.name;
                 outdated.job = updated.job;
                 outdated.salary = updated.salary;
+                outdated.dependants = updated.dependants;
             }
         }
 
@@ -188,6 +431,7 @@ namespace WebApplication4.Models
             outdated.name = updated.name;
             outdated.job = updated.job;
             outdated.salary = updated.salary;
+            outdated.dependants = updated.dependants;
         }
 
         public void removePerson(int id)
@@ -217,6 +461,7 @@ namespace WebApplication4.Models
 
             return selected;
         }
+
 
         public void addJob(string name)
         {
@@ -248,5 +493,9 @@ namespace WebApplication4.Models
                 jobs.Remove(selected);
             }
         }
+
+        
+
+
     }
 }

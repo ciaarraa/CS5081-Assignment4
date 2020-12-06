@@ -12,20 +12,22 @@
                 <th>Salary</th>
                 <th>Deviation</th>
                 <th>&nbsp;</th>
+
             </tr>
         </thead>
         <tbody>
             @foreach (var person in Model.persons)
             {
-<tr id="person_row_@person.id">
-    <td>@person.id</td>
-    <td>@person.name</td>
-    <td>@person.job.name</td>
-    <td>@person.salary</td>
-    <td>@String.Format("{0:+#.00;-#.00;+0.00}%", 100 * ((person.salary / person.job.averageSalary) - 1))</td>
+            <tr id="person_row_@person.id">
+                <td>@person.id</td>
+                <td>@person.name</td>
+                <td>@person.job.name</td>
+                <td>@person.salary</td>
+                <td>@String.Format("{0:+#.00;-#.00;+0.00}%", 100 * ((person.salary / person.job.averageSalary) - 1))</td>
 
-    <td><a asp-controller="Home" asp-action="PersonRemove" asp-route-id="@person.id">remove</a></td>
-</tr>            }
+                <td><a asp-controller="Home" asp-action="PersonRemove" asp-route-id="@person.id">remove</a></td>
+                <td><a asp-controller="Home" asp-action="DependantList" asp-route-id="@person.id">View Dependants</a></td>
+            </tr>            }
         </tbody>
     </table>
 </div>

@@ -87,6 +87,39 @@ namespace WebApplication4.Controllers
             return View(selected);
         }
 
+        public IActionResult DependantList(int? id)
+        {
+            DependantModel selected = null;
+
+            if (id != null)
+            {
+                selected = model.findDependantModel((int)id);
+            }
+
+            if (selected == null)
+            {
+                selected = new DependantModel();
+            }
+
+            return View(selected);
+        }
+
+        public IActionResult DependantRemove(int id)
+        {
+
+            DependantModel selected = model.findEnclosingList(id);
+            selected.removeDependant(id);
+            return RedirectToAction("Index");
+
+        }
+
+        
+        public IActionResult AddDependant(int id, string name)
+        {
+            model.addDependant(id, name);
+            return RedirectToAction("Index");
+        }
+
         [HttpPost]
         public IActionResult JobSave(JobModel job)
         {
@@ -105,5 +138,7 @@ namespace WebApplication4.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        
     }
 }

@@ -1,0 +1,31 @@
+﻿@model DependantModel;
+
+@{ ViewData["Title"] = "Dependant List"; }
+
+<div id="dependant_list">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Depenadnts</th>
+
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Dependant dependant in Model.dependants)
+            {
+<tr>
+    <td>@dependant.name</td>
+    <td><a asp-controller="Home" asp-action="DependantRemove" asp-route-id="@dependant.id">remove</a></td>
+</tr>
+}
+        </tbody>
+    </table>
+
+    <form id="dependant_form" method="post" action="/Home/AddDependant">
+        <input type="hidden" name="id" value="@Model.id" />
+        <p><label for="name">Add Dependant: </label><input name="name" /></p>
+        <p><button type="submit">Submit</button></p>
+    </form>
+
+</div>
