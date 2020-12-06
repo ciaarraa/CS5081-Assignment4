@@ -7,7 +7,6 @@
     <UserSecretsId>017522db-9b56-4c9e-9d69-27ab290780b9</UserSecretsId>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'WebApplication4' " />
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App">
       <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
